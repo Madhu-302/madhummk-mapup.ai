@@ -1,0 +1,23 @@
+import pandas as pd
+
+
+df = pd.read_csv('dataset-1.csv')
+df['Total'] = df['id_1'] + df['id_2']
+df.to_excel('output_data.xlsx', index=False)
+print(df.head())
+
+
+from openpyxl import load_workbook
+
+writer = pd.ExcelWriter('output_data.xlsx', engine='openpyxl')
+writer.book = load_workbook('output_data.xlsx',read_only=True,keep_vba = True)
+df.to_excel(writer, index=False, sheet_name='Sheet1')
+
+worksheet = writer.sheets['Sheet1']
+red_fill = openpyxl.styles.PatternFill(start_color='FF0000', end_color='FF0000', fill_type='solid')
+worksheet.conditional_formatting.add('D2:D100', openpyxl.formatting.Rule(type="cellIs", operator="greaterThan", formula=['100'], fill=red_fill))
+
+writer.save()
+
+average_column_c = df['Column C'].mean()
+print(f'The average of Column C is: {average_column_c}')
